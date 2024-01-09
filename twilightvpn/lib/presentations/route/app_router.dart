@@ -13,6 +13,7 @@ class AppRouter extends $AppRouter {
           page: PrivacyRoute.page,
         ),
         AutoRoute(page: MainRoute.page),
+        AutoRoute(page: PrivacyRoute.page),
         CustomRoute(
           page: PremiumRoute.page,
           transitionsBuilder: TransitionsBuilders.slideLeft,

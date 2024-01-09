@@ -16,10 +16,7 @@ class _CustombackgroundState extends State<Custombackground> {
             height: double.infinity,
             decoration:  BoxDecoration(
                 color: Colors.black.withOpacity(0.85),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/Layer 1.png'),
-                  fit: BoxFit.fill,
-                )),
+            ),
             child: widget.widget);
   }
 }

@@ -6,9 +6,7 @@ import 'package:openvpn/presentations/bloc/app_cubit.dart';
 import 'package:openvpn/presentations/bloc/app_state.dart';
 
 import 'package:openvpn/presentations/page/main/server_page/allserver.dart';
-import 'package:openvpn/presentations/page/main/server_page/pretimun.dart';
 
-import 'package:openvpn/resources/colors.dart';
 
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key});
@@ -41,8 +39,7 @@ class _ServerPageState extends State<ServerPage> {
             child: DecoratedBox(
                 decoration: const BoxDecoration(
                     color: Colors.transparent,
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/Layer 1.png'))),
+                 ),
                 child: Scaffold(
                     backgroundColor:  Colors.transparent,
                     appBar: AppBar(

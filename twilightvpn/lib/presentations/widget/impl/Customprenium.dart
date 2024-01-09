@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:openvpn/presentations/page/billing/premium_page.dart';
+import 'package:openvpn/resources/assets.gen.dart';
 
 class Custompretimum extends StatefulWidget {
   const Custompretimum({super.key});
@@ -23,7 +24,7 @@ class _CustompretimumState extends State<Custompretimum> {
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10),
             ),
-                 color: Colors.white,
+                 color: Colors.black,
           ),
  
       child:  Row(
@@ -50,24 +51,25 @@ class _CustompretimumState extends State<Custompretimum> {
             ),
           ),
           const SizedBox(width: 10,),
+          Assets.images.logo.image(),
           const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Go Prenium',
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 20),
               ),
               Text(
                 'Unlock all server',
-                style: TextStyle(color: Colors.black, fontSize: 12),
+                style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ],
           ),
 const Spacer(),
-TextButton(onPressed: () {}, child: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black,) )
+TextButton(onPressed: () {}, child: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white,) )
         ],
       ),
     ));

@@ -1,16 +1,10 @@
-
 import 'package:flutter/material.dart';
-
-
-
 import 'package:openvpn/presentations/page/main/privacy_page.dart';
 import 'package:openvpn/presentations/page/main/terms_page.dart';
 import 'package:openvpn/presentations/widget/impl/Customprenium.dart';
-
 import 'package:openvpn/presentations/widget/impl/ratting.dart';
-
 import 'package:openvpn/resources/assets.gen.dart';
-import 'package:openvpn/resources/colors.dart';
+import 'package:openvpn/resources/icondata.dart';
 import 'package:openvpn/utils/config.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -29,7 +23,7 @@ class _SettingPageState extends State<SettingPage> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         automaticallyImplyLeading : false,
-        title: const Text('Setting' , style: TextStyle(color: Colors.black, fontSize: 18),),
+        title: const Text('Setting' , style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.w600 ),),
         centerTitle: true,
 
       ),
@@ -43,12 +37,12 @@ class _SettingPageState extends State<SettingPage> {
           //   Navigator.push(context, MaterialPageRoute(builder: (_)=>  const HistoryPage()));
           // },),
           // ignore: lines_longer_than_80_chars
-          SettingListTile(title: 'Share with friends' ,svgWidget: Assets.icons.icVector.svg(), onPressed: (){
+          SettingListTile(title: 'Share with friends' ,svgWidget: const Icon(Icons.ios_share_outlined), onPressed: (){
             // ignore: lines_longer_than_80_chars
             Share.share('${Config.storeAppUrl}');
           },),
           // ignore: lines_longer_than_80_chars
-          SettingListTile(title: 'Feedback' ,svgWidget: Assets.icons.icLike.svg(), onPressed: () {
+          SettingListTile(title: 'Feedback' ,svgWidget: const Icon(Icons.chat), onPressed: () {
              showBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
@@ -65,24 +59,30 @@ class _SettingPageState extends State<SettingPage> {
                     // );
                   },),
           //ignore: lines_longer_than_80_chars
-          SettingListTile(title: 'Terms of Use' ,svgWidget: Assets.icons.icNoteText.svg(), onPressed: (){
+          SettingListTile(title: 'Terms of Use' ,svgWidget: const Icon(Icons.text_snippet_outlined), onPressed: (){
             // ignore: lines_longer_than_80_chars
             Navigator.push(context, MaterialPageRoute(builder: (_)=>  const TermsPage()));
           },),
           // ignore: lines_longer_than_80_chars
-          SettingListTile(title: 'Privacy Policy' ,svgWidget: Assets.icons.icSecuritysafe.svg(), onPressed: (){
+          SettingListTile(title: 'Privacy Policy' ,svgWidget:const Icon(Icons.privacy_tip_outlined), onPressed: (){
             // ignore: lines_longer_than_80_chars
             Navigator.push(context, MaterialPageRoute(builder: (_)=>  const PrivacyPage ()));
           },),
            // ignore: lines_longer_than_80_chars
-           SettingListTile(title: 'Version' , islast: true,svgWidget: Assets.icons.icVerify.svg(), onPressed: (){
-            // ignore: lines_longer_than_80_chars
-          
-          },),
-          Custompretimum()
+        const SizedBox(height: 40,),
+          const Custompretimum()
 
         ],
        
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Version: ${Config.version}', style: TextStyle(color: Colors.black , fontSize: 15),)
+          ],
+        ),
       ),
     ); 
   }
@@ -125,7 +125,7 @@ class SettingListTile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: onPressed,
-        
+        leading: svgWidget,
         title: Text(
           title,
           style: const TextStyle(fontSize: 14, color: Colors.black),
@@ -133,13 +133,13 @@ class SettingListTile extends StatelessWidget {
         trailing:  InkWell(
             // ignore: lines_longer_than_80_chars
             child: islast ?? false  ? const Text(Config.version) : ispre?? false ?  Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               // ignore: lines_longer_than_80_chars
               decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),
               color: Color(0xffFB5607) ,
               
               ),
-              child: Text('Try now', style: TextStyle(color: Colors.black),),
+              child: const Text('Try now', style: TextStyle(color: Colors.black),),
             ) : const Icon(
           Icons.arrow_forward_ios_rounded,
           color: Colors.black,

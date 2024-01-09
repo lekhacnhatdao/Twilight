@@ -1,25 +1,15 @@
-import 'dart:async';
-
-import 'package:auto_route/annotations.dart';
-
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openvpn/presentations/bloc/app_cubit.dart';
 import 'package:openvpn/presentations/bloc/app_state.dart';
-
-import 'package:openvpn/presentations/page/billing/premium_page.dart';
 import 'package:openvpn/presentations/page/main/history_page.dart';
-
+import 'package:openvpn/presentations/page/main/inforserver.dart';
 import 'package:openvpn/presentations/page/main/settingpage.dart';
+import 'package:openvpn/presentations/page/main/speedtest.dart';
 import 'package:openvpn/presentations/page/main/vpn_page.dart';
-import 'package:openvpn/presentations/widget/impl/backround.dart';
 import 'package:openvpn/presentations/widget/impl/custombar.dart';
 import 'package:openvpn/presentations/widget/index.dart';
-import 'package:openvpn/resources/assets.gen.dart';
-
-import 'package:openvpn/resources/colors.dart';
-import 'package:openvpn/resources/icondata.dart';
-
 import 'package:openvpn/utils/config.dart';
 
 @RoutePage()
@@ -36,11 +26,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AppCubit>().startBilling();
-    });
 
-    controller = TabController(length: 4, vsync: this);
+    controller = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -56,7 +43,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           Colors.grey,
                         ]
                       : state.titleStatus == 'Connected'
-                          ? [Colors.white, Color(0xff5cffd1)]
+                          ? [Colors.white, const Color(0xff5cffd1)]
                           : [Colors.white, Colors.grey],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter)),
@@ -67,69 +54,40 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 appBar: AppBar(
                   backgroundColor: Colors.white,
                   automaticallyImplyLeading: false,
-                  title: const Row(
+                  centerTitle: true,
+                  title:  Row(
                     children: [
-                      Image(
-                        image: AssetImage('assets/images/Group 907.png'),
-                        height: 25,
+                      const Image(
+                        image: AssetImage('assets/images/5.png'),
+                        height: 40,
                         fit: BoxFit.contain,
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      AppTitleText(
-                        text: Config.appName,
-                        color: Colors.black,
+                      Text('${ Config.appName.split('T').last}'  ,
+                        style: TextStyle(color: Colors.black),
                       ),
                     ],
                   ),
-                  actions: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: AppColors.purple,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (_) {
-                                return PremiumPage();
-                              }));
-                            },
-                            child: Row(
-                              children: [
-                                $AssetsImagesGen().logo.image(height: 10),
-                                const Text(
-                                  'Go VIP',
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ],
-                            ),
-                          )),
-                    )
-                    // BlocBuilder<AppCubit, AppState>(
-                    //   builder: (context, state) {
-                    //     return Container(
-                    //       decoration: const BoxDecoration(
-                    //         boxShadow: <BoxShadow>[
-                    //           BoxShadow(
-                    //             color: Colors.white12,
-                    //             blurRadius: 10,
-                    //           ),
-                    //         ],
-                    //         borderRadius: BorderRadius.all(Radius.circular(100)),
-                    //       ),
-                    //       padding: const EdgeInsets.symmetric(horizontal: 16),
-                    //       child: CachedNetworkImage(
-                    //         imageUrl: state.currentServer?.flag ?? 'assets/images/Frame.png',
-                    //         height: 32,
-                    //       ),
-                    //     );
-                    //   },
-                    // )
-                  ],
+
+                  // BlocBuilder<AppCubit, AppState>(
+                  //   builder: (context, state) {
+                  //     return Container(
+                  //       decoration: const BoxDecoration(
+                  //         boxShadow: <BoxShadow>[
+                  //           BoxShadow(
+                  //             color: Colors.white12,
+                  //             blurRadius: 10,
+                  //           ),
+                  //         ],
+                  //         borderRadius: BorderRadius.all(Radius.circular(100)),
+                  //       ),
+                  //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //       child: CachedNetworkImage(
+                  //         imageUrl: state.currentServer?.flag ?? 'assets/images/Frame.png',
+                  //         height: 32,
+                  //       ),
+                  //     );
+                  //   },
+                  // )
                 ),
                 body: Column(
                   children: [
@@ -137,22 +95,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       child:
                           TabBarView(controller: controller, children: const [
                         VpnPage(),
+                        InforServer(),
                         HistoryPage(),
-                        PremiumPage(),
+                        Speedtestpage(),
                         SettingPage(),
-                      
                       ]),
                     ),
                     CustomBottomBar(
                       controller: controller,
-                      listIcon: [
+                      listIcon: const [
                         Icons.bolt_rounded,
+                        Icons.info,
                         Icons.history_outlined,
                         Icons.radar,
                         Icons.settings,
                       ],
-                      onSelect: (index) { return controller.animateTo(index);
-                    },
+                      onSelect: (index) {
+                        return controller.animateTo(index);
+                      },
                     )
                   ],
                 ),

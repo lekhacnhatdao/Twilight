@@ -1,10 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:openvpn/data/local/app_db.dart';
-
 import 'package:openvpn/presentations/route/app_router.gr.dart';
-
-import 'package:openvpn/presentations/widget/impl/backround.dart';
 import 'package:openvpn/resources/assets.gen.dart';
 import 'package:openvpn/resources/colors.dart';
 
@@ -36,7 +33,7 @@ class AgreePrivacyPage extends StatelessWidget {
                     '\nProtect your privacy, be safe and avoid  losing your data.',
                   ),
                   SizedBox(height: screenHeight * 0.1,),
-                 $AssetsImagesGen().security.image(),
+                 const $AssetsImagesGen().security.image(),
                   SizedBox(height: screenHeight * 0.1),
           
                   GestureDetector(
@@ -49,12 +46,12 @@ class AgreePrivacyPage extends StatelessWidget {
                     child:  Container(
                       height: 50,
                       width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         gradient: LinearGradient(colors: AppColors.listgradient, begin: Alignment.centerLeft, end: Alignment.centerRight)
                       ),
-                        child: Align(child: const Text("Agree and continue", style: TextStyle(color: AppColors.primary),)) ,
+                        child: const Align(child: Text("Agree and continue", style: TextStyle(color: AppColors.primary),)) ,
                      
                      ),
                   ),

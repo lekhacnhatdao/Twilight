@@ -5,15 +5,16 @@ class Strings {
 
   //PremiumPage
   static const String upgradePremium = 'Upgrade Unlimited Edition';
-  static const String Unlimited = 'Unlimited breakthroughs with devices';
+  static const String Unlimited = 'Boundless developments with gadgets.';
   static const String benefitsOfThePremium =
-      'Choose Your Plan:';
-  static const String removeAds = '• Remove ads';
+      'Select Your Subscription:';
+  static const String removeAds = 'Ad-free experience';
   static const String unlockAllPremium =
-      '• Unlock all Unlimited Edition servers';
+      'Access all Premium servers.';
   static const String superFastServer = '• Super fast server, easy access';
-  static const String customerSupport = '• 24/7 customer support';
+  static const String customerSupport = '24/7 client assistance';
   static const String getPremiumNow = '3 days trial & Subscribe now';
+
   
 
   //ShopPage

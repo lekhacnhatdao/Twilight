@@ -54,7 +54,7 @@ class AppButtons extends StatelessWidget {
       );
     }
     return Container(
-    decoration: BoxDecoration(gradient: LinearGradient(colors: AppColors.listgradient), borderRadius: BorderRadius.all(Radius.circular(25))),
+    decoration: BoxDecoration(gradient: LinearGradient(colors: Colors.primaries), borderRadius: BorderRadius.all(Radius.circular(25))),
       margin: margin,
       child: ConstrainedBox(
         constraints: BoxConstraints.tightFor(

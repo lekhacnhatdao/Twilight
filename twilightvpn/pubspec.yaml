@@ -25,8 +25,8 @@ dependencies:
   get_it: ^7.6.0
   injectable: ^2.1.2
   #Networking
-  http: ^1.0.0
-  pretty_http_logger: ^1.0.1
+  http: ^0.13.5
+  pretty_http_logger: ^0.2.2
   cached_network_image: ^3.2.3
   #Local
   hive_flutter: ^1.1.0
@@ -50,6 +50,9 @@ dependencies:
   flutter_dash: ^1.0.0
   gradient_icon: ^2.0.0
   gradient_borders: ^1.0.0
+  syncfusion_flutter_gauges: ^24.1.43
+  flutter_internet_speed_test: ^1.4.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,7 @@ dev_dependencies:
   freezed: ^2.4.1
   json_serializable: ^6.7.1
   change_app_package_name: ^1.1.0
+  
 
 
   
@@ -104,6 +108,3 @@ flutter:
     - family: camptonBold
       fonts:
         - asset: assets/fonts/campton_bold.otf
-    - family: icomoon
-      fonts:
-        - asset: "assets/dataicon/icomoon.ttf"

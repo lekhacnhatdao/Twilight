@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:openvpn/presentations/widget/impl/app_body_text.dart';
 import 'package:openvpn/presentations/widget/impl/app_buttons.dart';
-import 'package:openvpn/presentations/widget/impl/app_label_text.dart';
-import 'package:openvpn/resources/assets.gen.dart';
 import 'package:openvpn/resources/colors.dart';
-import 'package:openvpn/resources/strings.dart';
 import 'package:openvpn/utils/config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +27,7 @@ class _RatingDialogState extends State<RatingDialog> {
     return 
        Container(
                  
-        color: Color.fromARGB(255, 0, 0, 0),
+        color: Colors.white,
          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,15 +53,15 @@ class _RatingDialogState extends State<RatingDialog> {
               text: 'Do you like ${Config.appName} ?',
               textAlign: TextAlign.center,
               size: 20,
-              color: AppColors.primary,
+              color: AppColors.primaryDark,
             ),
             AppBodyText(
               text: Platform.isIOS
                   ? 'Tap a star to rate on the App Store'
-                  : 'Tap a star to rate on the Google Play',
+                  : 'Tap on a star to provide your rating on Google Play',
               textAlign: TextAlign.center,
               size: 14,
-              color: AppColors.primary,
+              color: AppColors.primaryDark,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -79,19 +76,16 @@ class _RatingDialogState extends State<RatingDialog> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: i <= _rating
-                          ? Assets.icons.icStar2.svg(width: 35)
-                          : Assets.icons.icStar1.svg(width: 35),
+                          ? 
+                          Icon(Icons.star, color: Colors.amber,) : Icon(Icons.star, color: Colors.grey,),
                     ),
                   ),
               ],
             ),
             const SizedBox(height: 16),
-            AppButtons(
-              text: 'Send Feedback',
-              textColor: AppColors.primary,
-              backgroundColor: Colors.transparent,
-              onPressed: () {
-                Navigator.of(context).pop();
+            GestureDetector(
+              onTap: () {
+  Navigator.of(context).pop();
                 debugPrint('User rated: $_rating stars');
                 if (_rating > 3) {
                   _launchURL(Config.storeAppUrl);
@@ -100,6 +94,17 @@ class _RatingDialogState extends State<RatingDialog> {
                   // );
                 }
               },
+           child: Container(
+            height: 50,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xff5cffd1),
+              borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            child: Align(child: Text('Send Feedback', style: TextStyle(
+color: AppColors.primaryDark
+            ),))),
             ),
           SizedBox(height: 30,)
           ],),

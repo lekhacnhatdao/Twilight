@@ -1,22 +1,125 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dash/flutter_dash.dart';
 import 'package:openvpn/presentations/bloc/app_cubit.dart';
 import 'package:openvpn/presentations/bloc/app_state.dart';
 import 'package:openvpn/presentations/page/main/server_page/server_page.dart';
-import 'package:openvpn/presentations/widget/impl/CstomanimationButton.dart';
+import 'package:openvpn/presentations/route/app_router.gr.dart';
 import 'package:openvpn/presentations/widget/impl/Customprenium.dart';
 import 'package:openvpn/presentations/widget/impl/app_thapgiac_text.dart';
 import 'package:openvpn/presentations/widget/index.dart';
+import 'package:openvpn/resources/assets.gen.dart';
 import 'package:openvpn/resources/colors.dart';
 import 'package:openvpn/resources/icondata.dart';
-import 'package:openvpn/resources/strings.dart';
 
-class VpnPage extends StatelessWidget {
+class VpnPage extends StatefulWidget {
   const VpnPage({
     super.key,
   });
+
+  @override
+  State<VpnPage> createState() => _VpnPageState();
+}
+
+class _VpnPageState extends State<VpnPage> {
+  late Timer? _timer = null;
+  bool _dialogShown = false;
+  Timer? _connectingTimer;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AppCubit>().startBilling();
+      _maintenancePopup();
+    });
+    setState(() {});
+
+  }
+
+Future<void> _maintenancePopup() async {
+  await Future.delayed(const Duration(seconds: 7));
+  if (!this.mounted) {
+    return;
+  }
+   if ( context.read<AppCubit>().state.currentServer?.flag.isEmpty ?? true &&!_dialogShown) {
+    Future.microtask(() {
+      _showMaintenanceDialog();
+    });
+  }
+  _timer = Timer.periodic(const Duration(seconds: 60), (Timer timer) {
+    context.read<AppCubit>().fetchServerList();
+    if (context.read<AppCubit>().state.servers.isEmpty && !_dialogShown) {
+      Future.microtask(() {
+        _showMaintenanceDialog();
+      });
+    }
+  });
+}
+
+  void _showMaintenanceDialog() {
+    if (!this.mounted) return;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        _dialogShown = true;
+        return AlertDialog(
+          title: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Network Error'),
+            ],
+          ),
+          content: const Text(
+              textAlign: TextAlign.center,
+              'We are maintaining the system to upgrade the server. Please try again later'),
+          actions: <Widget>[
+            AppButtons(
+                textColor: AppColors.primary,
+                text: "Close",
+                backgroundColor: AppColors.colorRed,
+                onPressed: () {
+                  Navigator.pop(context);
+                  _dialogShown = false;
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDisconnectDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        _dialogShown = true;
+        return AlertDialog(
+          title: const Text('Oops! Sorry (-_-)'),
+          content: const Text(
+              'This server is currently down, please disconnect and choose other server'),
+          actions: <Widget>[
+            AppButtons(
+                textColor: AppColors.primary,
+                text: "Disconnect",
+                backgroundColor: AppColors.colorRed,
+                onPressed: () {
+                  _handleConnectButtonPressed();
+                  // Navigator.pop(context);
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  _dialogShown = false;
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +133,7 @@ class VpnPage extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-        
+
             // Container(
             //   margin: const EdgeInsets.symmetric(horizontal: 10),
             //   height: halfScreenHeight,
@@ -166,14 +269,15 @@ class VpnPage extends StatelessWidget {
             //     ],
             //   ),
             // ),
-        
+
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 60),
-              decoration:  BoxDecoration(
-                color: state.titleStatus == 'Connected'? Color(0xff0ae2a5) : Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  border: Border.all(width: 1, color: Color(0xff0ae2a5))
-                  ),
+              decoration: BoxDecoration(
+                  color: state.titleStatus == 'Connected'
+                      ? const Color(0xff0ae2a5)
+                      : Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(width: 1, color: const Color(0xff0ae2a5))),
               child: TextButton(
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -182,14 +286,22 @@ class VpnPage extends StatelessWidget {
                   },
                   style: TextButton.styleFrom(
                     minimumSize: const Size(0, 60),
-                    
-                   
                   ),
                   child: Row(
                     children: [
-                      Image.asset(
-                        state.currentServer?.flag ?? '',
-                        height: 32,
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  spreadRadius: 1,
+                                  blurRadius: 1)
+                            ]),
+                        child: Image.asset(
+                          state.currentServer?.flag ?? Assets.images.logo.path,
+                          height: 32,
+                        ),
                       ),
                       const SizedBox(
                         width: 15,
@@ -206,43 +318,62 @@ class VpnPage extends StatelessWidget {
                     ],
                   )),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height *0.15,),
-             LoadingButtons(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.15,
+            ),
+            LoadingButtons(
               isDisconnect: state.titleStatus == 'Not connected',
-              icondata: Appicon.power,
               isLoading: state.isConnecting,
-              icon: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Icon(Icons.bolt_outlined, size: 50, ),
+              icon: const Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Icon(
+                  Icons.bolt_outlined,
+                  size: 50,
+                ),
               ),
               text: 'connecting',
               onPressed: state.isConnecting
                   ? null
                   : () async {
                       await context.read<AppCubit>().toggle();
+                      if (state.isConnecting) {
+                        _connectingTimer ??=
+                            Timer(const Duration(seconds: 15), () {
+                          _showDisconnectDialog();
+                        });
+                      } else {
+                        _connectingTimer?.cancel();
+                        _connectingTimer = null;
+                      }
                     },
               changeUI: state.titleStatus == 'Not connected',
-                         
-                       ),
-                       SizedBox(height: MediaQuery.of(context).size.height *0.15,),
-           
-            Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: state.titleStatus == 'Connected'? Color(0xff0ae2a5) : Colors.white,),
-              width: double.infinity,
-                
-                margin: EdgeInsets.symmetric(horizontal: 50),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 20),
-                child: Column(
-                  children: [
-                    Text('status: ${state.titleStatus == 'Not connected' ? 'Tap on the button to connect with server' : state.titleStatus }', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black, fontSize: 18), textAlign: TextAlign.center,),
-                  state.titleStatus == 'Not connected' ? SizedBox() :  Text('Time: ${state.duration}',  style: TextStyle( color: Colors.black, fontSize: 15),),
-                 
-                  ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+
+            Column(
+              children: [
+                Text(
+                  'status: ${state.titleStatus == 'Not connected' ? 'Tap on the button to connect with server' : state.titleStatus}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                      fontSize: 18),
+                  textAlign: TextAlign.center,
                 ),
-                ),
-                SizedBox(height: 10,),
-                 Custompretimum(),
+                state.titleStatus == 'Not connected'
+                    ? const SizedBox()
+                    : Text(
+                        'Time: ${state.duration}',
+                        style: const TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height/ 6,
+            ),
+            const Custompretimum(),
           ],
         );
       },
@@ -278,5 +409,13 @@ class VpnPage extends StatelessWidget {
 
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
+  }
+
+  void _navigateToSelectLocation() {
+    AutoRouter.of(context).push(const ServerRoute());
+  }
+
+  void _handleConnectButtonPressed() {
+    context.read<AppCubit>().toggle();
   }
 }

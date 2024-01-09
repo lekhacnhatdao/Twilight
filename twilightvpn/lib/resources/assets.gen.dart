@@ -62,7 +62,7 @@ class $AssetsIconsGen {
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
-   static const String assets = '';
+
 
   /// File path: assets/images/Frame.png
 
@@ -70,13 +70,16 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Group17.png
 
-AssetGenImage get logo => const AssetGenImage('assets/images/Group 907.png');
+AssetGenImage get logo => const AssetGenImage('assets/images/5.png');
 AssetGenImage get crown => const AssetGenImage('assets/images/Group 905.png');
+AssetGenImage get removeads =>  const AssetGenImage('assets/images/remove.png');
+AssetGenImage get support =>  const AssetGenImage('assets/images/images.jpg');
+AssetGenImage get unlock =>  const AssetGenImage('assets/images/images.png');
   /// File path: assets/images/Layer 1.png
 
 
   /// List of all assets
-  List<AssetGenImage> get values => [ security, logo, crown];
+  List<AssetGenImage> get values => [ security, logo, crown, removeads, support];
 }
 
 class Assets {

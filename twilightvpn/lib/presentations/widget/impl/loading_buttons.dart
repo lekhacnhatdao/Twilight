@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:openvpn/presentations/widget/impl/CstomanimationButton.dart';
-import 'package:openvpn/presentations/widget/index.dart';
 import 'package:openvpn/resources/colors.dart';
 
 class LoadingButtons extends StatelessWidget {
@@ -13,13 +12,11 @@ class LoadingButtons extends StatelessWidget {
     this.height = 52,
     this.onPressed,
     this.margin,
-    required this.icondata,
     required this.changeUI, required this.isDisconnect,
   });
 
   final bool isLoading;
   final bool changeUI;
-  final IconData icondata;
   final bool isDisconnect;
   final Widget icon;
   final String text;

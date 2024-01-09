@@ -1,24 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:openvpn/data/local/app_db.dart';
-
 import 'package:openvpn/di/components/app_component.dart';
 import 'package:openvpn/domain/model/history/history_model.dart';
-
 import 'package:openvpn/presentations/bloc/app_cubit.dart';
 import 'package:openvpn/presentations/bloc/app_state.dart';
-
-import 'package:openvpn/presentations/widget/impl/Gradient.dart';
 import 'package:openvpn/presentations/widget/impl/app_body_text.dart';
-import 'package:openvpn/presentations/widget/impl/app_icon_buttons.dart';
-
 import 'package:openvpn/presentations/widget/impl/app_title_text.dart';
-
 import 'package:openvpn/resources/assets.gen.dart';
-import 'package:openvpn/resources/colors.dart';
 import 'package:openvpn/utils/extension/date_extension.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -55,15 +46,10 @@ class _HistoryPageState extends State<HistoryPage> {
           color: Colors.black,
         ),
         actions: [
-          AppIconButtons(
-            icon: isHistoryNotEmpty == true
+          TextButton(
+            child: isHistoryNotEmpty == true
                 ? Assets.icons.icCrown.svg()
-                : const Cstmgradient(
-                    child: Icon(Icons.delete),
-                    color: AppColors.listgradient,
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                : const Icon(Icons.delete, color: Colors.black),
             onPressed: () {
               if (isHistoryNotEmpty == true) {
                 _deleteAllConfirmationDialog();
@@ -92,21 +78,23 @@ class _HistoryPageState extends State<HistoryPage> {
                     children: [
                       SizedBox(height: 150),
                       SizedBox(height: 16),
-                      AppBodyText(
-                        text: "Your history connect server is empty!",
-                        size: 20,
-                        textAlign: TextAlign.center,
+                      Align(
+                        child: AppBodyText(
+                          text: "Server history is currently empty!",
+                          size: 20,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      SizedBox(
-                          width: 80,
-                          height: 80,
-                          child: Cstmgradient(
-                            color: AppColors.listgradient,
-                            child: Icon(
-                              Icons.hide_source,
-                              size: 50,
-                            ),
-                          )),
+                      // SizedBox(
+                      //     width: 80,
+                      //     height: 80,
+                      //     child: Cstmgradient(
+                      //       color: AppColors.listgradient,
+                      //       child: Icon(
+                      //         Icons.hide_source,
+                      //         size: 50,
+                      //       ),
+                      //     )),
                       SizedBox(height: 16),
                     ],
                   ),
@@ -114,9 +102,12 @@ class _HistoryPageState extends State<HistoryPage> {
                 Visibility(
                   visible: state.histories.isNotEmpty,
                   child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, mainAxisSpacing :1,childAspectRatio: 1,mainAxisExtent:120
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 1,
+                            childAspectRatio: 1,
+                            mainAxisExtent: 120),
                     padding: const EdgeInsets.only(bottom: 16),
                     itemBuilder: (context, index) {
                       final history = state.histories[index];
@@ -137,43 +128,76 @@ class _HistoryPageState extends State<HistoryPage> {
     return showCupertinoDialog(
       context: context,
       builder: (context) {
-        return CupertinoAlertDialog(
-          title: const Text(
-            'Clear All history',
+        return Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.white,
           ),
-          content: const Text(
-            'Do you want to delete all?',
-          ),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 14, color: Colors.black),
-                )),
-            TextButton(
-                onPressed: () {
-                  getIt<AppDatabase>().deleteAllHistories(() {
-                    _refreshListView();
-                    if (!context.mounted) return;
-                    // Navigator.of(context).popUntil((route) => route.isFirst);
-                    EasyLoading.showToast('All History connection is deleted');
-                    // Future.delayed(Duration(seconds: 2), () {
-                    //   setState(() {
-                    //     //return _refreshListView();
-                    //   });
-                    // });
-                    context.read<AppCubit>().fetchHistoryList();
-                    Navigator.pop(context);
-                  });
-                },
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(fontSize: 14, color: Colors.black),
-                )),
-          ],
+          margin: const EdgeInsets.symmetric(vertical: 320, horizontal: 40),
+          height: 100,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Clean History',
+                ),
+                const Text(
+                  'Would you like to remove everything ?',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey),
+                      child: Container(
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Cancel',
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.black),
+                            )),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Color(0xff5cffd1)),
+                      child: TextButton(
+                          onPressed: () {
+                            getIt<AppDatabase>().deleteAllHistories(() {
+                              _refreshListView();
+                              if (!context.mounted) return;
+                              // Navigator.of(context).popUntil((route) => route.isFirst);
+                              EasyLoading.showToast(
+                                  'All History connection is deleted');
+                              // Future.delayed(Duration(seconds: 2), () {
+                              //   setState(() {
+                              //     //return _refreshListView();
+                              //   });
+                              // });
+                              context.read<AppCubit>().fetchHistoryList();
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          )),
+                    ),
+                  ],
+                )
+              ]),
         );
       },
     );
@@ -183,11 +207,10 @@ class _HistoryPageState extends State<HistoryPage> {
     final server = history.vpnServerModel;
     return Container(
       height: 120,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-     
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +220,7 @@ class _HistoryPageState extends State<HistoryPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(1000),
               child: Container(
-                decoration: BoxDecoration(boxShadow: [
+                decoration: const BoxDecoration(boxShadow: [
                   BoxShadow(
                       blurRadius: 4, spreadRadius: 40, color: Colors.black)
                 ]),
@@ -209,7 +232,6 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
           ),
-     
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,7 +242,6 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ],
           ),
-      
           AppBodyText(
             text: history.createAt.toStringFormatted(),
             size: 12,

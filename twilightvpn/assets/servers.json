@@ -28,7 +28,7 @@
           "2",
           "3"
         ],
-        "free": true
+        "free": false
       }
     },
     {
@@ -133,7 +133,7 @@
           "2",
           "3"
         ],
-        "free": false
+        "free": true
       }
     },
     {
@@ -314,7 +314,7 @@
       "lat": "40.4186",
       "lon": "-3.7323",
       "zip": "28008",
-      "ovpn": "assets/opvn/fr_client_54.37.213.180",
+      "ovpn": "assets/opvn/us_client_50.114.12.12.ovpn",
       "flag": "assets/flags/ES.png",
       "vpn": {
         "table": [
@@ -322,7 +322,7 @@
           "2",
           "3"
         ],
-        "free": false
+        "free": true
       }
     },
     {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:openvpn/resources/colors.dart';
-import 'package:openvpn/resources/icondata.dart';
 
 class AppLabelText extends StatelessWidget {
   const AppLabelText({
